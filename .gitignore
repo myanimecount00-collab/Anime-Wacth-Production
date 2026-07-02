@@ -1,2 +1,24 @@
-.vercel
+# Vercel
+.vercel/
+
+# Environment
 .env*
+.env.local
+
+# Node
+node_modules/
+
+# VS Code
+.vscode/
+
+# Flutter
+**/.dart_tool/
+**/build/
+**/.flutter-plugins
+**/.flutter-plugins-dependencies
+
+# Logs
+*.log
+
+# Debug HTML
+debug*.html
