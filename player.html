@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AnimeVault - Player</title>
+    <style>
+        body { background: #000; color: #fff; font-family: Arial; margin: 0; padding: 20px; }
+        #status { text-align: center; }
+        #player { max-width: 100%; margin: 20px auto; }
+        video { width: 100%; height: auto; display: block; }
+
+        .iframe-wrapper {
+            width: 100%;
+            max-width: 1400px;
+            margin: auto;
+        }
+
+        .iframe-wrapper iframe {
+            width: 100% !important;
+            height: 80vh !important;
+            border: none;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+<h1 id="status">Loading Episode...</h1>
+
+<div id="player"></div>
+
+<script>
+async function loadPlayer() {
+    const params = new URLSearchParams(window.location.search);
+    const episodeUrl = params.get('url');
+    console.log('EPISODE URL:', episodeUrl);
+
+    if (!episodeUrl) {
+        document.getElementById('status').textContent = 'URL episode tidak ditemukan.';
+        return;
+    }
+
+    try {
+        console.log("STEP 1");
+        const res = await fetch(`/api/stream?url=${encodeURIComponent(episodeUrl)}`);
+
+        console.log("STEP 2");
+        const data = await res.json();
+
+        console.log("STEP 3", data);
+
+        // Pilih konten player berdasarkan ketersediaan videoUrl
+        if (data.videoUrl) {
+            // Gunakan pemutar video HTML5 langsung dengan tinggi 600px
+            document.getElementById('player').innerHTML = `
+                <video
+                  controls
+                  autoplay
+                  width="100%"
+                  height="600"
+                  src="${data.videoUrl}">
+                </video>
+            `;
+            document.getElementById('status').textContent = 'Memutar video langsung...';
+        } else if (data.iframeHtml) {
+            // Gunakan iframe hasil scrape dibungkus wrapper
+            document.getElementById('player').innerHTML = `
+                <div class="iframe-wrapper">
+                    ${data.iframeHtml}
+                </div>
+            `;
+            document.getElementById('status').textContent = 'Memutar lewat iframe...';
+        } else {
+            document.getElementById('status').textContent = 'Gagal memuat player.';
+        }
+    } catch (err) {
+        console.error(err);
+        document.getElementById('status').textContent = 'Error memuat episode.';
+    }
+}
+
+loadPlayer();
+</script>
+
+</body>
+</html>

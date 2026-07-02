@@ -1,0 +1,1245 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AnimeVault — Nonton Anime Gratis</title>
+  <link rel="icon" href="data:," />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #07070d;
+      --surface: #0f0f1a;
+      --surface2: #161625;
+      --surface3: #1e1e30;
+      --border: rgba(255,255,255,0.07);
+      --border-hover: rgba(124,58,237,0.45);
+      --accent: #7c3aed;
+      --accent2: #a855f7;
+      --accent-soft: rgba(124,58,237,0.15);
+      --accent-glow: rgba(124,58,237,0.3);
+      --text: #e8e8f0;
+      --text-dim: #9898b0;
+      --muted: #5a5a72;
+      --white: #fff;
+      --red: #ef4444;
+      --green: #22c55e;
+      --yellow: #f59e0b;
+      --radius: 12px;
+      --radius-lg: 16px;
+      --radius-xl: 20px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', system-ui, sans-serif;
+      font-size: 15px;
+      line-height: 1.6;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ═══════════════════════════════
+       NAVBAR
+    ═══════════════════════════════ */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: rgba(7,7,13,0.8);
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      border-bottom: 1px solid var(--border);
+      padding: 0 2rem;
+      height: 62px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+
+    .nav-logo {
+      display: flex; align-items: center; gap: 10px;
+      text-decoration: none; flex-shrink: 0;
+    }
+    .nav-logo .logo-icon {
+      width: 32px; height: 32px;
+      background: linear-gradient(135deg, #6d28d9, #a855f7);
+      border-radius: 9px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 15px;
+      box-shadow: 0 0 16px rgba(124,58,237,0.4);
+    }
+    .nav-logo span {
+      font-family: 'Manrope', sans-serif;
+      font-size: 22px; font-weight: 800; color: var(--white);
+      letter-spacing: -0.4px;
+    }
+    .nav-logo span em { font-style: normal; color: var(--accent2); }
+
+    .nav-links {
+      display: flex; align-items: center; gap: 0; list-style: none;
+    }
+    .nav-links li { display: inline-block; }
+    .nav-links a {
+      color: var(--muted); text-decoration: none; font-size: 13.5px; font-weight: 500;
+      padding: 6px 14px; border-radius: 8px;
+      transition: color 0.2s, background 0.2s;
+    }
+    .nav-links a:hover { color: var(--text-dim); }
+    .nav-links a.active { color: var(--white); }
+
+    .nav-right {
+      display: flex; align-items: center; gap: 8px;
+    }
+    .btn-icon {
+      background: none; border: none; cursor: pointer;
+      color: var(--muted); font-size: 16px;
+      width: 36px; height: 36px; border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.2s, color 0.2s;
+    }
+    .btn-icon:hover { background: var(--surface2); color: var(--text); }
+
+    .btn-login {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-dim);
+      font-size: 13px; font-weight: 500;
+      padding: 7px 16px; border-radius: 9px; cursor: pointer;
+      text-decoration: none; transition: all 0.2s;
+    }
+    .btn-login:hover { border-color: rgba(255,255,255,0.15); color: var(--white); }
+
+    .btn-primary-sm {
+      background: var(--accent);
+      border: none;
+      color: var(--white);
+      font-size: 13px; font-weight: 600;
+      padding: 7px 16px; border-radius: 9px; cursor: pointer;
+      text-decoration: none;
+      box-shadow: 0 0 20px rgba(124,58,237,0.3);
+      transition: opacity 0.2s, box-shadow 0.2s;
+    }
+    .btn-primary-sm:hover { opacity: 0.88; box-shadow: 0 0 28px rgba(124,58,237,0.45); }
+
+    /* ═══════════════════════════════
+       HERO
+    ═══════════════════════════════ */
+    .hero {
+      position: relative;
+      padding-top: 90px;
+      padding-bottom: 60px;
+      min-height: auto;
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    /* Ambient glow layers */
+    .hero-bg {
+      position: absolute; inset: 0; pointer-events: none;
+    }
+    .hero-bg::before {
+      content: '';
+      position: absolute;
+      width: 700px; height: 700px;
+      right: -100px; top: 50%; transform: translateY(-50%);
+      background: radial-gradient(circle, rgba(124,58,237,0.14) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero-bg::after {
+      content: '';
+      position: absolute;
+      width: 500px; height: 400px;
+      left: -100px; top: 20%;
+      background: radial-gradient(ellipse, rgba(168,85,247,0.07) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    /* Subtle dot grid */
+    .hero-grid-overlay {
+      position: absolute; inset: 0; pointer-events: none;
+      background-image: radial-gradient(rgba(255,255,255,0.04) 1px, transparent 1px);
+      background-size: 32px 32px;
+      mask-image: radial-gradient(ellipse 70% 70% at 60% 50%, black 20%, transparent 80%);
+    }
+
+    .hero-inner {
+      position: relative;
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 3rem 2rem;
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 2rem;
+      align-items: center;
+    }
+
+    /* Left copy */
+    .hero-left {}
+
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(124,58,237,0.1);
+      border: 1px solid rgba(124,58,237,0.3);
+      border-radius: 100px; padding: 5px 14px; margin-bottom: 1.75rem;
+      font-size: 11.5px; font-weight: 600; color: var(--accent2);
+      letter-spacing: 0.3px;
+    }
+    .badge-dot {
+      width: 6px; height: 6px;
+      background: var(--green); border-radius: 50%;
+      box-shadow: 0 0 6px var(--green);
+      animation: pulse 2s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    .hero h1 {
+      font-family: 'Manrope', sans-serif;
+      font-size: clamp(2.4rem, 4.5vw, 3.6rem);
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: -1px;
+      color: var(--white);
+      margin-bottom: 1.25rem;
+    }
+    .hero h1 .highlight {
+      background: linear-gradient(130deg, #c084fc 0%, #a855f7 40%, #7c3aed 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-desc {
+      color: var(--text-dim);
+      font-size: 15.5px;
+      line-height: 1.75;
+      max-width: 440px;
+      margin-bottom: 2.25rem;
+    }
+
+    .hero-actions {
+      display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+      margin-bottom: 2rem;
+    }
+    .btn-primary {
+      display: inline-flex; align-items: center; gap: 9px;
+      background: var(--accent);
+      color: var(--white); text-decoration: none;
+      font-size: 14px; font-weight: 700;
+      padding: 13px 26px; border-radius: 11px;
+      border: none; cursor: pointer;
+      box-shadow: 0 4px 24px rgba(124,58,237,0.4), 0 1px 0 rgba(255,255,255,0.1) inset;
+      transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s;
+    }
+    .btn-primary:hover { opacity: 0.9; transform: translateY(-1px); box-shadow: 0 6px 32px rgba(124,58,237,0.5); }
+
+    .btn-secondary {
+      display: inline-flex; align-items: center; gap: 9px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      color: var(--text); text-decoration: none;
+      font-size: 14px; font-weight: 500;
+      padding: 13px 22px; border-radius: 11px;
+      cursor: pointer; transition: all 0.2s;
+    }
+    .btn-secondary:hover { background: var(--surface3); border-color: rgba(255,255,255,0.12); }
+
+    /* Search inside hero */
+    .hero-search {
+      margin-bottom: 2rem;
+      max-width: 850px;
+      width: 100%;
+    }
+    .hero-search .search-wrapper {
+      display: flex; align-items: center; gap: 8px;
+      position: relative;
+      max-width: 100%;
+    }
+    .hero-search .search-icon {
+      position: absolute; left: 16px; top: 50%; transform: translateY(-50%);
+      color: var(--muted); pointer-events: none;
+    }
+    .hero-search .search-input {
+      flex: 1;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      color: var(--text);
+      font-size: 14px;
+      padding: 14px 14px 14px 48px;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      font-family: inherit;
+    }
+    .hero-search .search-input::placeholder { color: var(--muted); }
+    .hero-search .search-input:focus {
+      border-color: rgba(124,58,237,0.5);
+      box-shadow: 0 0 0 3px rgba(124,58,237,0.08);
+    }
+    .hero-search .search-btn-group { display: flex; gap: 6px; }
+    .hero-search .search-submit {
+      background: var(--accent);
+      color: var(--white); border: none;
+      border-radius: 9px; font-size: 13px; font-weight: 600;
+      padding: 0 18px; cursor: pointer; height: 48px;
+      transition: opacity 0.2s;
+      font-family: inherit;
+    }
+    .hero-search .search-submit:hover { opacity: 0.85; }
+    .hero-search .search-reset {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      color: var(--text-dim); font-size: 13px; font-weight: 500;
+      padding: 0 16px; height: 48px; border-radius: 9px;
+      cursor: pointer; transition: background 0.2s;
+      font-family: inherit;
+    }
+    .hero-search .search-reset:hover { background: var(--surface3); }
+    .hero-search .search-tags {
+      display: flex; align-items: center; gap: 8px; margin-top: 12px; flex-wrap: wrap;
+    }
+    .hero-search .search-tag-label { font-size: 12px; color: var(--muted); }
+    .hero-search .search-tag {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      color: var(--text-dim);
+      font-size: 12px; padding: 4px 12px; border-radius: 100px;
+      cursor: pointer; transition: all 0.2s; text-decoration: none;
+    }
+    .hero-search .search-tag:hover { border-color: var(--accent2); color: var(--accent2); background: rgba(124,58,237,0.08); }
+
+    /* Stats */
+    .hero-stats {
+      display: flex; gap: 0;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: var(--surface);
+      overflow: hidden;
+      width: fit-content;
+    }
+    .stat-item {
+      padding: 18px 30px;
+      border-right: 1px solid var(--border);
+    }
+    .stat-item:last-child { border-right: none; }
+    .stat-num {
+      font-family: 'Manrope', sans-serif;
+      font-size: 24px; font-weight: 800;
+      color: var(--white); letter-spacing: -0.5px;
+    }
+    .stat-label { font-size: 11px; color: var(--muted); margin-top: 2px; letter-spacing: 0.2px; }
+
+    /* ═══════════════════════════════
+       FEATURED CARD (Hero Right)
+    ═══════════════════════════════ */
+    .hero-featured { position: relative; }
+
+    /* Glow behind card */
+    .hero-featured::before {
+      content: '';
+      position: absolute;
+      inset: -40px;
+      background: radial-gradient(circle at 50% 50%, rgba(124,58,237,0.18) 0%, transparent 65%);
+      pointer-events: none; z-index: 0;
+    }
+
+    .featured-card {
+      width: 100%;
+      height: 360px;
+      border-radius: 24px;
+      overflow: hidden;
+      position: relative;
+      cursor: pointer;
+      transition: opacity 0.4s ease;
+      box-shadow:
+        0 0 0 1px rgba(255,255,255,0.06),
+        0 24px 64px rgba(0,0,0,0.6),
+        0 0 80px rgba(124,58,237,0.12);
+    }
+
+    /* The actual image lives here — full bleed, no separate placeholder */
+    .featured-img {
+      position: absolute;
+      inset: 0;
+      background-size: cover;
+      background-position: center;
+      background-color: #1a0a2e; /* fallback */
+    }
+
+    /* When a real image is loaded, remove the placeholder emoji */
+    .featured-img.has-image .featured-placeholder {
+      display: none;
+    }
+
+    .featured-card:hover .featured-img { transform: scale(1.03); }
+
+    .featured-placeholder {
+      position: absolute; inset: 0; z-index: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 80px; opacity: 0.12;
+    }
+
+    .play-btn {
+      position: absolute; top: 50%; left: 50%; z-index: 3;
+      transform: translate(-50%, -50%);
+      width: 60px; height: 60px;
+      background: rgba(124,58,237,0.9);
+      border: 1.5px solid rgba(255,255,255,0.25);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 0 0 12px rgba(124,58,237,0.12), 0 8px 24px rgba(0,0,0,0.4);
+      transition: transform 0.2s, background 0.2s, box-shadow 0.2s;
+      backdrop-filter: blur(8px);
+    }
+    .play-btn:hover {
+      transform: translate(-50%, -50%) scale(1.1);
+      background: var(--accent);
+      box-shadow: 0 0 0 16px rgba(124,58,237,0.15), 0 8px 32px rgba(0,0,0,0.5);
+    }
+    .play-btn svg { width: 22px; height: 22px; fill: var(--white); margin-left: 3px; }
+
+    .featured-overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: flex-end;
+      padding: 32px;
+      background: linear-gradient(
+        to top,
+        rgba(0,0,0,0.9) 0%,
+        rgba(0,0,0,0.5) 35%,
+        rgba(0,0,0,0.1) 70%,
+        transparent 100%
+      );
+    }
+    .featured-genres {
+      display: flex; gap: 6px; margin-bottom: 10px; flex-wrap: wrap;
+    }
+    .genre-tag {
+      background: rgba(124,58,237,0.25);
+      border: 1px solid rgba(124,58,237,0.4);
+      color: #d8b4fe;
+      font-size: 10px; font-weight: 700;
+      padding: 3px 9px; border-radius: 5px;
+      text-transform: uppercase; letter-spacing: 0.7px;
+      backdrop-filter: blur(8px);
+    }
+    .featured-title {
+      font-family: 'Manrope', sans-serif;
+      font-size: 22px; font-weight: 800;
+      color: var(--white); margin-bottom: 6px;
+      line-height: 1.2; letter-spacing: -0.3px;
+      text-shadow: 0 2px 12px rgba(0,0,0,0.5);
+    }
+    .featured-info {
+      font-size: 12px; color: rgba(255,255,255,0.5);
+      display: flex; align-items: center; gap: 8px;
+    }
+    .featured-info .dot { width: 3px; height: 3px; background: currentColor; border-radius: 50%; opacity: 0.5; }
+
+    /* Dot indicators */
+    .featured-dots {
+      position: absolute; bottom: -28px; left: 50%; transform: translateX(-50%);
+      display: flex; gap: 6px; z-index: 3;
+    }
+    .featured-dot {
+      width: 6px; height: 6px; border-radius: 3px;
+      background: var(--muted); transition: all 0.3s ease; cursor: pointer;
+    }
+    .featured-dot.active { width: 20px; background: var(--accent2); }
+
+    /* ═══════════════════════════════
+       DIVIDER
+    ═══════════════════════════════ */
+    .divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      max-width: 1240px; margin: 0 auto 0;
+    }
+
+    /* ═══════════════════════════════
+       SECTIONS
+    ═══════════════════════════════ */
+    .section {
+      max-width: 1240px; margin: 0 auto; padding: 4rem 2rem 3rem;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 20px;
+    }
+
+    .main-content .see-all {
+      margin-bottom: 2px;
+    }
+
+    .section-title {
+      font-family: 'Manrope', sans-serif;
+      font-size: 22px; font-weight: 800;
+      color: var(--white); letter-spacing: -0.3px;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .section-eyebrow {
+      font-size: 10px; font-weight: 700;
+      color: var(--accent2); text-transform: uppercase;
+      letter-spacing: 1px; margin-bottom: 6px;
+    }
+    .title-pill {
+      background: var(--accent-soft);
+      border: 1px solid rgba(124,58,237,0.3);
+      color: var(--accent2); font-size: 10px; font-weight: 700;
+      padding: 3px 8px; border-radius: 5px;
+      text-transform: uppercase; letter-spacing: 0.5px;
+    }
+    .see-all {
+      font-size: 16px;
+      font-weight: 700;
+      color: #b4b4c7;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: .2s;
+    }
+    .see-all:hover {
+      color: var(--accent2);
+      transform: translateX(2px);
+    }
+    .see-all svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    /* ═══════════════════════════════
+       TOP POPULAR (3 besar)
+    ═══════════════════════════════ */
+    .top-popular {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .top-card {
+      position: relative;
+      overflow: hidden;
+      border-radius: 18px;
+      min-height: 260px;
+      text-decoration: none;
+      color: white;
+      border: 1px solid rgba(255,255,255,.08);
+    }
+
+    .top-card img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .top-card::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+          to top,
+          rgba(0,0,0,.95),
+          rgba(0,0,0,.2)
+      );
+    }
+
+    .top-content {
+      position: absolute;
+      z-index: 2;
+      bottom: 20px;
+      left: 20px;
+      right: 20px;
+    }
+
+    .top-rank {
+      font-size: 12px;
+      color: #a855f7;
+      font-weight: 800;
+      margin-bottom: 6px;
+    }
+
+    .top-title {
+      font-size: 22px;
+      font-weight: 800;
+      line-height: 1.2;
+    }
+
+    /* ═══════════════════════════════
+       ANIME CARDS (grid biasa)
+    ═══════════════════════════════ */
+    .anime-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(158px, 1fr));
+      gap: 14px;
+    }
+
+    .anime-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform 0.22s cubic-bezier(0.34,1.56,0.64,1), border-color 0.2s, box-shadow 0.2s;
+      text-decoration: none; color: inherit;
+      display: block;
+    }
+    .anime-card:hover {
+      transform: translateY(-5px);
+      border-color: var(--border-hover);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.4), 0 0 0 1px rgba(124,58,237,0.15);
+    }
+
+    .card-thumb {
+      aspect-ratio: 3/4;
+      position: relative;
+      overflow: hidden;
+      background: var(--surface2);
+    }
+    .card-thumb img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.4s ease;
+    }
+    .anime-card:hover .card-thumb img { transform: scale(1.05); }
+
+    .card-thumb-fallback {
+      width: 100%; height: 100%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 38px; opacity: 0.15;
+    }
+    .c1 { background: linear-gradient(160deg, #150a2e, #2d1060); }
+    .c2 { background: linear-gradient(160deg, #081a09, #0d3a18); }
+    .c3 { background: linear-gradient(160deg, #1a0808, #3a0f0f); }
+    .c4 { background: linear-gradient(160deg, #080a1a, #0e1a40); }
+    .c5 { background: linear-gradient(160deg, #171006, #3a2a00); }
+    .c6 { background: linear-gradient(160deg, #081618, #0a2e30); }
+
+    /* Overlay on hover */
+    .card-thumb::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(7,7,13,0.7) 0%, transparent 50%);
+      opacity: 0; transition: opacity 0.3s;
+    }
+    .anime-card:hover .card-thumb::after { opacity: 1; }
+
+    .card-badges {
+      position: absolute; top: 8px; left: 8px; right: 8px; z-index: 1;
+      display: flex; justify-content: space-between; align-items: flex-start;
+    }
+    .card-ep-badge {
+      background: rgba(7,7,13,0.82);
+      border: 1px solid rgba(255,255,255,0.08);
+      backdrop-filter: blur(6px);
+      color: var(--text-dim);
+      font-size: 10px; font-weight: 600;
+      padding: 3px 7px; border-radius: 5px;
+    }
+    .card-status-new {
+      background: var(--accent);
+      color: var(--white);
+      font-size: 9px; font-weight: 800;
+      padding: 3px 7px; border-radius: 5px;
+      text-transform: uppercase; letter-spacing: 0.7px;
+    }
+    .card-status-sub { background: #1d4ed8; }
+
+    .card-body { padding: 10px 12px 13px; }
+    .card-title {
+      font-size: 12.5px; font-weight: 600; color: var(--white);
+      line-height: 1.4; margin-bottom: 7px;
+      display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .card-footer {
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .card-genre { font-size: 11px; color: var(--muted); }
+    .card-score {
+      font-size: 11px; font-weight: 700; color: var(--yellow);
+      display: flex; align-items: center; gap: 3px;
+    }
+
+    /* ═══════════════════════════════
+       LOADING / ERROR
+    ═══════════════════════════════ */
+    .loading-text {
+      text-align: center; color: var(--muted); padding: 2.5rem;
+      grid-column: 1 / -1; font-size: 14px;
+    }
+    .error-text {
+      text-align: center; color: var(--red); padding: 2.5rem;
+      grid-column: 1 / -1; font-size: 14px;
+    }
+
+    /* ═══════════════════════════════
+       LAYOUT UTAMA — 1 KOLOM
+    ═══════════════════════════════ */
+    .main-content {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 2rem 2rem 2rem;
+    }
+    .main-content .section-header {
+      margin-bottom: 1.2rem;
+    }
+
+    /* ═══════════════════════════════
+       FOOTER
+    ═══════════════════════════════ */
+    footer {
+      max-width: 1240px; margin: 0 auto;
+      padding: 3rem 2rem 2rem;
+      border-top: 1px solid var(--border);
+      margin-top: 1rem;
+    }
+    .footer-grid {
+      display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 3rem;
+      margin-bottom: 2.5rem;
+    }
+    .footer-brand p { font-size: 13px; color: var(--muted); margin-top: 12px; line-height: 1.75; }
+    .footer-col h4 { font-size: 12px; font-weight: 700; color: var(--white); margin-bottom: 14px; letter-spacing: 0.5px; text-transform: uppercase; }
+    .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 9px; }
+    .footer-col ul a { font-size: 13px; color: var(--muted); text-decoration: none; transition: color 0.2s; }
+    .footer-col ul a:hover { color: var(--text); }
+
+    /* Footer contact section */
+    .footer-contact {
+      padding: 20px 0;
+      border-top: 1px solid var(--border);
+      margin-bottom: 20px;
+    }
+    .footer-contact h4 {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 6px;
+    }
+    .footer-contact p {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+    .footer-contact a {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: linear-gradient(135deg, #7c3aed, #a855f7);
+      color: #fff;
+      text-decoration: none;
+      padding: 10px 18px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 700;
+      box-shadow: 0 0 20px rgba(124,58,237,.25);
+      transition: .25s;
+    }
+    .footer-contact a:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 30px rgba(124,58,237,.4);
+    }
+
+    .footer-bottom {
+      display: flex; align-items: center; justify-content: space-between;
+      font-size: 12px; color: var(--muted); padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+    }
+    .footer-disclaimer {
+      max-width: 580px; font-size: 11px; color: rgba(90,90,114,0.7);
+      margin-top: 1rem; line-height: 1.6;
+    }
+
+    /* ═══════════════════════════════
+       MOBILE
+    ═══════════════════════════════ */
+    @media (max-width: 900px) {
+      .hero-inner { grid-template-columns: 1fr; gap: 2.5rem; }
+      .hero-featured { display: none; }
+      .top-popular {
+        grid-template-columns: 1fr;
+      }
+    }
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .footer-grid { grid-template-columns: 1fr 1fr; gap: 2rem; }
+      .anime-grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); }
+      .hero-stats { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a href="#" class="nav-logo">
+      <div class="logo-icon">⚡</div>
+      <span>Anime<em>Vault</em></span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#" class="active">Beranda</a></li>
+      <li><a href="terbaru.html">Terbaru</a></li>
+      <li><a href="#">Genre</a></li>
+      <li><a href="#">Jadwal</a></li>
+      <li><a href="populer.html">Top Anime</a></li>
+    </ul>
+    <div class="nav-right">
+      <button class="btn-icon" aria-label="Cari anime">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      </button>
+      <a href="#" class="btn-login">Masuk</a>
+      <a href="#" class="btn-primary-sm">Daftar Gratis</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-grid-overlay"></div>
+    <div class="hero-inner">
+
+      <!-- Left copy -->
+      <div class="hero-left">
+        <div class="hero-badge">
+          <span class="badge-dot"></span>
+          Diperbarui setiap hari
+        </div>
+        <h1>
+          Nonton Anime<br>
+          Favoritmu<br>
+          <span class="highlight">Tanpa Batas</span>
+        </h1>
+        <p class="hero-desc">
+          Ribuan episode anime sub Indo tersedia gratis. Dari shounen klasik hingga isekai terbaru — semuanya ada di satu tempat.
+        </p>
+        <div class="hero-actions">
+          <a href="#" class="btn-primary">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+            Mulai Nonton
+          </a>
+          <a href="#" class="btn-secondary">
+            Jelajahi Genre
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </a>
+        </div>
+
+        <!-- Search inside hero -->
+        <div class="hero-search">
+          <div class="search-wrapper">
+            <div class="search-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+            </div>
+            <input class="search-input" type="text" id="searchInput" placeholder="Cari judul anime, genre, studio..." />
+            <div class="search-btn-group">
+              <button class="search-submit" onclick="handleSearch()">Cari</button>
+              <button class="search-reset" onclick="resetSearch()">Reset</button>
+            </div>
+          </div>
+          <div class="search-tags">
+            <span class="search-tag-label">Populer:</span>
+            <a href="#" class="search-tag" onclick="quickSearch('One Piece');return false;">One Piece</a>
+            <a href="#" class="search-tag" onclick="quickSearch('Attack on Titan');return false;">Attack on Titan</a>
+            <a href="#" class="search-tag" onclick="quickSearch('Naruto');return false;">Naruto</a>
+            <a href="#" class="search-tag" onclick="quickSearch('Jujutsu Kaisen');return false;">Jujutsu Kaisen</a>
+            <a href="#" class="search-tag" onclick="quickSearch('Chainsaw Man');return false;">Chainsaw Man</a>
+          </div>
+        </div>
+
+        <div class="hero-stats">
+          <div class="stat-item">
+            <div class="stat-num">12.000+</div>
+            <div class="stat-label">Episode tersedia</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-num">800+</div>
+            <div class="stat-label">Judul anime</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-num">100%</div>
+            <div class="stat-label">Sub Indonesia</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Featured Card -->
+      <div class="hero-featured">
+        <div class="featured-card" id="featuredCard">
+          <div class="featured-img" id="featuredImage">
+            <div class="featured-placeholder">⚔️</div>
+          </div>
+          <button class="play-btn" aria-label="Putar episode">
+            <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+          </button>
+          <div class="featured-overlay">
+            <div class="featured-genres" id="featuredGenres">
+              <span class="genre-tag">Action</span>
+              <span class="genre-tag">Fantasy</span>
+              <span class="genre-tag">Shounen</span>
+            </div>
+            <div class="featured-title" id="trendingTitle">Memuat...</div>
+            <div class="featured-info">
+              <span>2024</span>
+              <span class="dot"></span>
+              <span>Season 1</span>
+              <span class="dot"></span>
+              <span id="trendingEpisode">— Episode</span>
+            </div>
+          </div>
+        </div>
+        <div class="featured-dots" id="featuredDots"></div>
+      </div>
+
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- BARU DIUPDATE -->
+  <section class="section">
+    <div class="section-header">
+      <div>
+        <div class="section-eyebrow">Terbaru</div>
+        <div class="section-title">
+          Baru Diupdate
+          <span class="title-pill">Hari ini</span>
+        </div>
+      </div>
+      <a href="terbaru.html" class="see-all">
+        Lihat semua
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+    </div>
+    <div class="anime-grid" id="newEpisodesGrid">
+      <div class="loading-text">Memuat anime terbaru...</div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- POPULER — 1 KOLOM PENUH -->
+  <div class="main-content">
+    <div class="section-header">
+      <div>
+        <div class="section-eyebrow">Chart</div>
+        <div class="section-title">Anime Populer Minggu Ini</div>
+      </div>
+      <a href="populer.html" class="see-all">
+        Lihat semua
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+    </div>
+    <!-- TOP 3 POPULER -->
+    <div id="topPopular"></div>
+    <!-- SISA POPULER -->
+    <div class="anime-grid" id="popularGrid"></div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="#" class="nav-logo" style="text-decoration:none">
+          <div class="logo-icon">⚡</div>
+          <span style="font-family:'Manrope',sans-serif;font-size:16px;font-weight:800;color:#fff">Anime<em style="font-style:normal;color:#a855f7">Vault</em></span>
+        </a>
+        <p>Platform nonton anime sub Indonesia terlengkap. Diperbarui setiap hari dengan episode terbaru dari musim yang sedang berjalan.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Jelajahi</h4>
+        <ul>
+          <li><a href="terbaru.html">Terbaru</a></li>
+          <li><a href="populer.html">Top Anime</a></li>
+          <li><a href="#">Musim Ini</a></li>
+          <li><a href="#">Jadwal Tayang</a></li>
+          <li><a href="#">Random</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Genre</h4>
+        <ul>
+          <li><a href="#">Action</a></li>
+          <li><a href="#">Romance</a></li>
+          <li><a href="#">Isekai</a></li>
+          <li><a href="#">Horror</a></li>
+          <li><a href="#">Slice of Life</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Lainnya</h4>
+        <ul>
+          <li><a href="#">Tentang Kami</a></li>
+          <li><a href="#">Kontak</a></li>
+          <li><a href="#">Request Anime</a></li>
+          <li><a href="#">Lapor Bug</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Kontak section -->
+    <div class="footer-contact">
+      <h4>Punya saran atau menemukan bug?</h4>
+      <p>Bantu AnimeVault jadi lebih baik.</p>
+      <a href="mailto:myanimecount00@gmail.com">
+        ✉️ Kirim Email
+      </a>
+    </div>
+
+    <div class="footer-bottom">
+      <span>© 2025 AnimeVault. Dibuat dengan ❤️ untuk para wibu Indonesia.</span>
+      <span style="color:var(--muted)">v1.0.0</span>
+    </div>
+    <p class="footer-disclaimer">
+      AnimeVault tidak menyimpan file video di server kami. Semua konten didapatkan dari sumber pihak ketiga melalui teknik web scraping untuk keperluan pendidikan dan hiburan.
+    </p>
+  </footer>
+
+  <script>
+    /* ─────────────────────────────────────
+       BUILD CARD
+    ───────────────────────────────────── */
+    const COLORS = ['c1','c2','c3','c4','c5','c6'];
+
+    function buildCard(anime, idx = 0) {
+      const colorClass = COLORS[idx % COLORS.length];
+      const imgHtml = anime.thumb
+        ? `<img src="${anime.thumb}" alt="${escHtml(anime.title)}" loading="lazy"
+              onerror="this.replaceWith(Object.assign(document.createElement('div'), {className:'card-thumb-fallback ${colorClass}', innerHTML:'🎬'}))" />`
+        : `<div class="card-thumb-fallback ${colorClass}">🎬</div>`;
+
+      return `
+        <a href="anime.html?url=${encodeURIComponent(anime.link)}" class="anime-card">
+          <div class="card-thumb">
+            ${imgHtml}
+            <div class="card-badges">
+              <span class="card-ep-badge">${escHtml(anime.ep || '???')}</span>
+              ${anime.isNew ? '<span class="card-status-new">Baru</span>' : ''}
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="card-title">${escHtml(anime.title)}</div>
+            <div class="card-footer">
+              <span class="card-genre">${escHtml(anime.genre || '')}</span>
+              ${anime.score ? `<span class="card-score">★ ${anime.score}</span>` : ''}
+            </div>
+          </div>
+        </a>`;
+    }
+
+    function escHtml(str) {
+      if (!str) return '';
+      return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+
+    /* ─────────────────────────────────────
+       LOAD TERBARU
+    ───────────────────────────────────── */
+    async function loadAnimeTerbaru() {
+      const grid = document.getElementById('newEpisodesGrid');
+      try {
+        grid.innerHTML = '<div class="loading-text">Memuat anime terbaru...</div>';
+        const response = await fetch('/api/terbaru');
+        const data = await response.json();
+        grid.innerHTML = data.map((anime, i) => buildCard(anime, i)).join('');
+      } catch (error) {
+        console.error(error);
+        grid.innerHTML = '<div class="error-text">Gagal memuat anime. Coba lagi.</div>';
+      }
+    }
+
+    /* ─────────────────────────────────────
+       RESET SEARCH — clear input + reload
+    ───────────────────────────────────── */
+    function resetSearch() {
+      document.getElementById('searchInput').value = '';
+      loadAnimeTerbaru();
+    }
+
+    /* ─────────────────────────────────────
+       TRENDING / FEATURED CARD
+    ───────────────────────────────────── */
+    let trendingData = [];
+    let currentTrending = 0;
+    let trendingTimer = null;
+
+    async function loadTrending() {
+      try {
+        // Hentikan timer lama biar gak bocor
+        if (trendingTimer) {
+          clearInterval(trendingTimer);
+          trendingTimer = null;
+        }
+
+        const res = await fetch('/api/trending');
+        trendingData = await res.json();
+        if (!trendingData.length) return;
+
+        buildDots();
+        renderTrending(0);
+
+        trendingTimer = setInterval(() => {
+          currentTrending = (currentTrending + 1) % trendingData.length;
+          renderTrending(currentTrending);
+        }, 6000);
+      } catch(err) {
+        console.error('Trending load error:', err);
+      }
+    }
+
+    function buildDots() {
+      const container = document.getElementById('featuredDots');
+      container.innerHTML = trendingData.map((_, i) =>
+        `<div class="featured-dot${i === 0 ? ' active' : ''}" onclick="goToTrending(${i})"></div>`
+      ).join('');
+    }
+
+    function goToTrending(idx) {
+      // Hentikan timer, ganti manual, lalu nyalakan lagi
+      if (trendingTimer) {
+        clearInterval(trendingTimer);
+        trendingTimer = null;
+      }
+      currentTrending = idx;
+      renderTrending(idx);
+      trendingTimer = setInterval(() => {
+        currentTrending = (currentTrending + 1) % trendingData.length;
+        renderTrending(currentTrending);
+      }, 6000);
+    }
+
+    function updateDots(idx) {
+      document.querySelectorAll('.featured-dot').forEach((dot, i) => {
+        dot.classList.toggle('active', i === idx);
+      });
+    }
+
+    function renderTrending(idx) {
+      const anime = trendingData[idx];
+      if (!anime) return;
+
+      const card   = document.getElementById('featuredCard');
+      const imgEl  = document.getElementById('featuredImage');
+
+      card.style.opacity = '0';
+      card.style.transition = 'opacity 0.3s ease';
+
+      setTimeout(() => {
+        if (anime.thumb) {
+          imgEl.style.backgroundImage = `url('${anime.thumb}')`;
+          imgEl.style.backgroundSize  = 'cover';
+          imgEl.style.backgroundPosition = 'center top';
+          imgEl.style.backgroundRepeat   = 'no-repeat';
+          imgEl.classList.add('has-image');
+        } else {
+          imgEl.style.backgroundImage = '';
+          imgEl.classList.remove('has-image');
+        }
+
+        document.getElementById('trendingTitle').textContent   = anime.title   || 'Unknown';
+        document.getElementById('trendingEpisode').textContent = anime.episode || '—';
+
+        card.onclick = () => {
+          if (anime.link) window.location = `anime.html?url=${encodeURIComponent(anime.link)}`;
+        };
+
+        updateDots(idx);
+        card.style.opacity = '1';
+      }, 300);
+    }
+
+    /* ─────────────────────────────────────
+       SEARCH
+    ───────────────────────────────────── */
+    function handleSearch() {
+      const query = document.getElementById('searchInput').value.trim();
+      if (query) searchAnime(query);
+    }
+
+    async function searchAnime(query) {
+      const grid = document.getElementById('newEpisodesGrid');
+      try {
+        grid.innerHTML = '<div class="loading-text">Mencari anime...</div>';
+        const res  = await fetch(`/api/search?q=${encodeURIComponent(query)}`);
+        const data = await res.json();
+        if (!data.results || !data.results.length) {
+          grid.innerHTML = '<div class="error-text">Anime tidak ditemukan.</div>';
+          return;
+        }
+        grid.innerHTML = data.results.map((a, i) => buildCard(a, i)).join('');
+      } catch (err) {
+        console.error(err);
+        grid.innerHTML = '<div class="error-text">Gagal melakukan pencarian.</div>';
+      }
+    }
+
+    function quickSearch(query) {
+      document.getElementById('searchInput').value = query;
+      handleSearch();
+    }
+
+    /* ─────────────────────────────────────
+       LOAD POPULAR PREVIEW (top 3 featured + rest)
+    ───────────────────────────────────── */
+    async function loadPopularPreview() {
+      const grid = document.getElementById('popularGrid');
+      const top = document.getElementById('topPopular');
+
+      try {
+        const res = await fetch('/api/trending');
+        const data = await res.json();
+
+        // 3 anime teratas dengan layout spesial
+        const top3 = data.slice(0, 3);
+        top.innerHTML = `
+          <div class="top-popular">
+            ${top3.map((anime, i) => `
+              <a href="anime.html?url=${encodeURIComponent(anime.link)}" class="top-card">
+                <img src="${anime.thumb}" alt="${escHtml(anime.title)}" />
+                <div class="top-content">
+                  <div class="top-rank">#${i+1} TRENDING</div>
+                  <div class="top-title">${escHtml(anime.title)}</div>
+                </div>
+              </a>
+            `).join('')}
+          </div>
+        `;
+
+        // Sisa anime (indeks 3–8) ditampilkan dalam grid card biasa
+        grid.innerHTML =
+          data
+            .slice(3, 9)
+            .map((anime, i) => buildCard(anime, i))
+            .join('');
+
+      } catch (err) {
+        console.error(err);
+        grid.innerHTML = '<div class="error-text">Gagal memuat anime populer.</div>';
+      }
+    }
+
+    /* ─────────────────────────────────────
+       INIT
+    ───────────────────────────────────── */
+    loadAnimeTerbaru();
+    loadTrending();
+    loadPopularPreview();
+
+    document.getElementById('searchInput').addEventListener('keydown', e => {
+      if (e.key === 'Enter') handleSearch();
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AnimeVault — Detail Anime</title>
+    <style>
+        body {
+            background: #0a0a0f;
+            color: white;
+            font-family: 'Inter', system-ui, sans-serif;
+            margin: 0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: auto;
+            padding: 40px 20px;
+        }
+
+        .anime-header {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+
+        #cover {
+            width: 250px;
+            border-radius: 12px;
+            object-fit: cover;
+            background: #151520;
+        }
+
+        .anime-info {
+            flex: 1;
+            min-width: 280px;
+        }
+
+        #title {
+            margin-top: 0;
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        #genres {
+            color: #a855f7;
+            font-weight: 500;
+            margin-bottom: 12px;
+        }
+
+        #synopsis {
+            line-height: 1.8;
+            color: #ccc;
+            font-size: 15px;
+        }
+
+        h2 {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            border-left: 4px solid #a855f7;
+            padding-left: 16px;
+        }
+
+        .episode-card {
+            background: #151520;
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            transition: background 0.2s;
+        }
+
+        .episode-card a {
+            color: white;
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 500;
+            display: block;
+            width: 100%;
+        }
+
+        .episode-card:hover {
+            background: #222230;
+        }
+
+        .loading-text {
+            color: #6b6b80;
+            text-align: center;
+            padding: 3rem;
+        }
+
+        .error-text {
+            color: #ef4444;
+            text-align: center;
+            padding: 3rem;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <div class="anime-header">
+        <img id="cover" src="" alt="Cover Anime" width="250" />
+        <div class="anime-info">
+            <h1 id="title">Loading...</h1>
+            <p id="genres"></p>
+            <p id="synopsis"></p>
+        </div>
+    </div>
+
+    <h2>Daftar Episode</h2>
+    <div id="episodes"></div>
+
+</div>
+
+<script>
+    async function loadAnime() {
+        const params = new URLSearchParams(window.location.search);
+        const animeUrl = params.get('url');
+
+        console.log('Anime URL:', animeUrl);
+
+        if (!animeUrl) {
+            document.getElementById('title').textContent = 'URL anime tidak ditemukan.';
+            return;
+        }
+
+        try {
+            const res = await fetch(`/api/detail?url=${encodeURIComponent(animeUrl)}`);
+            const data = await res.json();
+
+            // Isi detail anime
+            document.getElementById('title').textContent = data.title || 'Judul tidak ditemukan';
+            document.getElementById('cover').src = data.thumb || '';
+            document.getElementById('genres').textContent = 'Genre: ' + (data.genres?.join(', ') || '');
+            document.getElementById('synopsis').textContent = data.synopsis || '';
+
+            // Bangun daftar episode
+            const episodesDiv = document.getElementById('episodes');
+            episodesDiv.innerHTML = ''; // Bersihkan loading state
+
+            if (data.episodes && data.episodes.length > 0) {
+                data.episodes.forEach(ep => {
+                    episodesDiv.innerHTML += `
+                        <div class="episode-card">
+                            <a href="player.html?url=${encodeURIComponent(ep.link)}">
+                                ${ep.title}
+                            </a>
+                        </div>
+                    `;
+                });
+            } else {
+                episodesDiv.innerHTML = '<div class="loading-text">Tidak ada episode ditemukan.</div>';
+            }
+
+            console.log(data);
+
+        } catch (err) {
+            console.error(err);
+            document.getElementById('title').textContent = 'Gagal memuat detail anime.';
+            document.getElementById('episodes').innerHTML = '<div class="error-text">Error memuat episode.</div>';
+        }
+    }
+
+    loadAnime();
+</script>
+
+</body>
+</html>

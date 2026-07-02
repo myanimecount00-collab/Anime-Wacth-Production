@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Anime Populer - AnimeVault</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    body{
+      background:#07070d;
+      color:#fff;
+      font-family:'Inter',sans-serif;
+      margin:0;
+      padding:0;
+    }
+
+    .container{
+      max-width:1240px;
+      margin:auto;
+      padding:90px 24px 40px;
+    }
+
+    h1{
+      margin-bottom:8px;
+    }
+
+    p{
+      color:#9898b0;
+      margin-bottom:24px;
+    }
+
+    .back-btn{
+      display:inline-block;
+      margin-bottom:24px;
+      color:#a855f7;
+      text-decoration:none;
+      font-weight:600;
+    }
+
+    .anime-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fill,minmax(160px,1fr));
+      gap:14px;
+    }
+
+    .loading-text,
+    .error-text{
+      grid-column:1/-1;
+      text-align:center;
+      padding:30px;
+    }
+
+    .error-text{
+      color:#ef4444;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <a href="index.html" class="back-btn">
+    ← Kembali ke Beranda
+  </a>
+
+  <h1>Anime Populer Minggu Ini</h1>
+
+  <p>
+    Daftar anime yang sedang ramai ditonton para wibu penghuni bumi.
+  </p>
+
+  <div id="popularGrid" class="anime-grid">
+    <div class="loading-text">
+      Memuat anime populer...
+    </div>
+  </div>
+
+</div>
+
+<script src="js/api.js"></script>
+<script src="js/cards.js"></script>
+
+<script>
+
+async function loadPopularAnime() {
+
+  const grid = document.getElementById('popularGrid');
+
+  try {
+
+    const res = await fetch('/api/trending');
+   const data = await res.json();
+
+    if (!data || !data.length) {
+      grid.innerHTML =
+        '<div class="error-text">Tidak ada data populer.</div>';
+      return;
+    }
+
+    grid.innerHTML =
+      data.map((anime,i) => buildCard(anime,i)).join('');
+
+  } catch(err) {
+
+    console.error(err);
+
+    grid.innerHTML =
+      '<div class="error-text">Gagal memuat anime populer.</div>';
+  }
+}
+
+loadPopularAnime();
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "862047552501",
+    "project_id": "animewatch-production",
+    "storage_bucket": "animewatch-production.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:862047552501:android:739105a6c08e76138bd6bc",
+        "android_client_info": {
+          "package_name": "id.aniva.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "862047552501-89p19noj5104bm880pq6ogi2iuqgrrj1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "id.aniva.app",
+            "certificate_hash": "7d64203858deb89b7e531faedabcd638329ea65a"
+          }
+        },
+        {
+          "client_id": "862047552501-ocqdj9fa1cfmkhbb3ktculqrl8n17jgi.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDjE0b07hl_Q9acoNybMo9CRz0h3M6Yk3Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "862047552501-ocqdj9fa1cfmkhbb3ktculqrl8n17jgi.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "862047552501-h9f43khuosh6295vfoqnln42ovpf7s2a.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.animevaultApp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
