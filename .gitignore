@@ -1,15 +1,5 @@
-# Vercel
-.vercel/
-
-# Environment
-.env*
-.env.local
-
 # Node
 node_modules/
-
-# VS Code
-.vscode/
 
 # Flutter
 **/.dart_tool/
@@ -17,8 +7,18 @@ node_modules/
 **/.flutter-plugins
 **/.flutter-plugins-dependencies
 
+# VS Code
+.vscode/
+
+# Environment
+.env*
+.env.local
+
+# Vercel
+.vercel/
+
+# Debug
+debug*.html
+
 # Logs
 *.log
-
-# Debug HTML
-debug*.html
